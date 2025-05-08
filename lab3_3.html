@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Обробка послідовності</title>
+</head>
+<body>
+
+    <h3>Завантаження і обробка послідовності</h3>
+
+    <input type="file" id="inputFile">
+    <button onclick="load()">Завантажити</button>
+    <button onclick="sortBySum()">Сортувати за сумою цифр</button>
+    <button onclick="save()">Зберегти</button>
+
+    <div id="output"></div>
+
+    <script>
+        let list = [];
+        let selected = [];
+
+        function load() {
+            let file = document.getElementById("inputFile").files[0];
+            if (!file) return;
+
+            let reader = new FileReader();
+
+            reader.onload = function(e) {
+                list = e.target.result.split(/\s+/).filter(Boolean);
+                show();
+            };
+
+            reader.readAsText(file);
+        }
+
+        function show() {
+            let out = document.getElementById("output");
+            out.innerHTML = "";
+
+            list.forEach((item, i) => {
+                let el = document.createElement("span");
+                el.textContent = item + " ";
+                el.style.cursor = "pointer";
+
+                el.onclick = function() {
+                    pick(i, el);
+                };
+
+                out.appendChild(el);
+            });
+        }
+
+        function pick(index, el) {
+            if (selected.includes(index)) {
+                el.style.background = "";
+                selected = selected.filter(i => i !== index);
+                return;
+            }
+
+            if (selected.length < 2) {
+                selected.push(index);
+                el.style.background = "orange";
+            }
+
+            if (selected.length === 2) {
+                let i1 = selected[0];
+                let i2 = selected[1];
+
+                let temp = list[i1];
+                list[i1] = list[i2];
+                list[i2] = temp;
+
+                selected = [];
+                show();
+            }
+        }
+
+        function sortBySum() {
+            list.sort((a, b) => {
+                const sumA = a.split("").reduce((acc, digit) => acc + parseInt(digit), 0);
+                const sumB = b.split("").reduce((acc, digit) => acc + parseInt(digit), 0);
+                return sumA - sumB ;
+            });
+
+            show();
+        }
+
+        function save() {
+            let blob = new Blob([list.join("\n")], { type: "text/plain" });
+            let link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = "sequence.txt";
+            link.click();
+        }
+    </script>
+
+</body>
+</html>

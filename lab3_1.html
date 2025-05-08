@@ -1,0 +1,50 @@
+<!-- Ощипок Карина ПЗ-23-1 Номер у списку підгрупи - 19 Варіант 1 1 0 -->
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Перестановка елементів</title>
+</head>
+<body>
+
+    <h3>Клікни по двох елементах, щоб поміняти їх місцями</h3>
+
+    <div id="list">
+        <p class="item">A</p>
+        <p class="item">B</p>
+        <p class="item">C</p>
+        <p class="item">D</p>
+        <p class="item">E</p>   
+    </div>
+
+    <script>
+        let selected = [];
+
+        let items = document.querySelectorAll('.item');
+
+        items.forEach(function(item) {
+            item.addEventListener('click', function() {
+
+                if (selected.includes(item)) return;
+
+                selected.push(item);
+
+                if (selected.length === 2) {
+                    let first = selected[0];   
+                    let second = selected[1];  
+
+                    let parent = first.parentNode;
+
+                    let next = first.nextSibling;
+
+                    parent.insertBefore(first, second);
+                    parent.insertBefore(second, next);
+                    
+                    selected = [];
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

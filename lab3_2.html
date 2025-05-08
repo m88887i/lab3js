@@ -1,0 +1,85 @@
+<!-- Ощипок Карина ПЗ-23-1 Номер у списку підгрупи - 19 Варіант 1 1 0 -->
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Траєкторія точки</title>
+</head>
+<body>
+
+    <h3>Введи координати точки</h3>
+
+    <label>X:</label>
+    <input type="number" id="x">
+    <label>Y:</label>
+    <input type="number" id="y">
+    <button onclick="start()">Почати</button>
+
+    <br><br>
+    <canvas id="canvas" width="500" height="500"></canvas>
+
+    <p id="info">Введи координати і натисни "Почати"</p>
+
+    <script>
+        let canvas = document.getElementById("canvas");
+        let ctx = canvas.getContext("2d");
+        let info = document.getElementById("info");
+
+        let targetX = Math.floor(Math.random() * 500);
+        let targetY = Math.floor(Math.random() * 500);
+
+        function drawTarget() {
+            ctx.fillStyle = "red";
+            ctx.beginPath();
+            ctx.arc(targetX, targetY, 5, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        function start() {
+            let x = parseInt(document.getElementById("x").value);
+            let y = parseInt(document.getElementById("y").value);
+
+            if (isNaN(x) || isNaN(y)) {
+                info.textContent = "Введи правильні числа!";
+                return;
+            }
+
+            ctx.clearRect(0, 0, 500, 500);
+            drawTarget();
+
+            movePoint(x, y, x, y);
+        }
+
+        function movePoint(x, y, startX, startY) {
+            let steps = 10;
+            let dx = (targetX - x) / steps;
+            let dy = (targetY - y) / steps;
+            let count = 0;
+
+            function step() {
+                if (count >= steps) {
+                    let distance = Math.hypot(targetX - startX, targetY - startY);
+                    info.textContent = "Відстань: " + distance.toFixed(2);
+                    return;
+                }
+
+                ctx.fillStyle = "blue";
+                ctx.beginPath();
+                ctx.arc(x, y, 3, 0, Math.PI * 2);
+                ctx.fill();
+
+                x += dx;
+                y += dy;
+                count++;
+
+                requestAnimationFrame(step);
+            }
+
+            step();
+        }
+
+        drawTarget();
+    </script>
+
+</body>
+</html>
